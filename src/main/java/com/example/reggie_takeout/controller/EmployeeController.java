@@ -5,6 +5,7 @@ import com.example.reggie_takeout.pojo.Employee;
 import com.example.reggie_takeout.pojo.Result;
 import com.example.reggie_takeout.service.EmployeeService;
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.util.DigestUtils;
@@ -13,10 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDateTime;
 
 
 @RestController
 @RequestMapping("/employee")
+@Slf4j
 public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
@@ -59,34 +62,37 @@ public class EmployeeController {
         return Result.success("成功退出");
     }
 
+    @PostMapping
+    public Result<String> save(HttpServletRequest request, @RequestBody Employee employee) {
+        log.info("新增的员工信息：{}", employee.toString());
+        //设置默认密码为123456，并采用MD5加密
+        employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
+        //设置createTime和updateTime
+        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());
+//        //根据session来获取创建人的id
+//        Long empId = (Long) request.getSession().getAttribute("employee");
+//        //并设置
+//        employee.setCreate_user(empId);
+//        employee.setUpdate_user(empId);
+        //存入数据库
+        employeeService.save(employee);
+        return Result.success("添加员工成功");
+    }
 
-    /**
-     * 登入功能
-     * @param request
-     * @param employee
-     * @return
-     */
-    //发送post请求
-//    @PostMapping("/login")
-//    public Result<Employee> login(HttpServletRequest request, @RequestBody Employee employee) {
-//        String password = employee.getPassword();
-//        password = DigestUtils.md5DigestAsHex(password.getBytes());
-//        //这部分就是MP
-//        LambdaQueryWrapper<Employee> lqw = new LambdaQueryWrapper<>();
-//        lqw.eq(Employee::getUsername, employee.getUsername());
-//        Employee emp = employeeService.getOne(lqw);
-//        if (emp == null) {
-//            return Result.error("登陆失败");
-//        }
-//        if (!emp.getPassword().equals(password)) {
-//            return Result.error("登录失败");
-//        }
-//        if (emp.getStatus() == 0) {
-//            return Result.error("该用户已被禁用");
-//        }
-//        //存个Session，只存个id就行了
-//        request.getSession().setAttribute("employee",emp.getId());
-//        return Result.success(emp);
+//    @PostMapping
+//    public Result<String> addEmployee(HttpServletRequest request,@RequestBody Employee employee){
+//        employee.setPassword(DigestUtils.md5DigestAsHex("123456".getBytes()));
+//        employee.setCreateTime(LocalDateTime.now());
+//        employee.setUpdateTime(LocalDateTime.now());
+//
+//        Long empId = (Long)request.getSession().getAttribute("employee");
+//        employee.setCreateUser(empId);
+//        employee.setUpdateUser(empId);
+//
+//        employeeService.save(employee);
+//        return Result.success("添加员工成功");
 //    }
+
 
 }

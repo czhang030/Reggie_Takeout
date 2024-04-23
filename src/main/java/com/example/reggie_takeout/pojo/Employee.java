@@ -1,18 +1,18 @@
 package com.example.reggie_takeout.pojo;
 
 
-import com.baomidou.mybatisplus.annotation.FieldFill;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableName;
+import com.baomidou.mybatisplus.annotation.*;
 import lombok.Data;
 
+import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 
 @Data
 @TableName("db_reggie.employee")
 public class Employee {
 
-  private long id;
+  @TableId(type = IdType.ASSIGN_ID)
+  private int id;
   private String name;
   private String username;
   private String password;
@@ -25,8 +25,8 @@ public class Employee {
 
   //这两个先不用管，后面再说
   @TableField(fill = FieldFill.INSERT)
-  private Long createUser;
+  private Long create_user;
 
   @TableField(fill = FieldFill.INSERT_UPDATE)
-  private Long updateUser;
+  private Long update_user;
 }

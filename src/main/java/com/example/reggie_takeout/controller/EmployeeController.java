@@ -1,6 +1,7 @@
 package com.example.reggie_takeout.controller;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.example.reggie_takeout.pojo.Employee;
 import com.example.reggie_takeout.pojo.Result;
 import com.example.reggie_takeout.service.EmployeeService;
@@ -9,10 +10,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.util.DigestUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 
@@ -94,5 +92,12 @@ public class EmployeeController {
 //        return Result.success("添加员工成功");
 //    }
 
+    //分页获取员工信息
+    @GetMapping("/page")
+    public Result<Page<Employee>> page(@RequestParam("page") int page, @RequestParam("pageSize") int pageSize, @RequestParam("name") String name) {
+        log.info("page={},pageSize={},name={}", page, pageSize, name);
+
+        return employeeService.getEmployeePageByName(page, pageSize, name);
+    }
 
 }

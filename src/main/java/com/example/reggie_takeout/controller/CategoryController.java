@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping("/category")
@@ -59,5 +61,18 @@ public class CategoryController {
         return Result.success("分类更新成功");
    }
 
+    @GetMapping("/list")
+    public Result<List<Category>> list(Category category) {
+        //条件构造器
+        LambdaQueryWrapper<Category> queryWrapper = new LambdaQueryWrapper<>();
+        //添加条件，这里只需要判断是否为菜品（type为1是菜品，type为2是套餐）
+        queryWrapper.eq(category.getType() != null,Category::getType,category.getType());
+        //添加排序条件
+        queryWrapper.orderByAsc(Category::getSort).orderByDesc(Category::getUpdateTime);
+        //查询数据
+        List<Category> list = categoryService.list(queryWrapper);
+        //返回数据
+        return Result.success(list);
+    }
 
 }

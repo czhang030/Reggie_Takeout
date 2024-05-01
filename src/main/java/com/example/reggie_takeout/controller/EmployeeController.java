@@ -100,4 +100,24 @@ public class EmployeeController {
         return employeeService.getEmployeePageByName(page, pageSize, name);
     }
 
+    //更新员工信息
+    @PutMapping
+    public Result<String> update(HttpServletRequest request, @RequestBody Employee employee){
+
+//        Long update_user = (Long) request.getSession().getAttribute("employee");
+          Long update_user = 1L;
+        return employeeService.updateEmployee(update_user,employee);
+
+    }
+
+
+
+    @GetMapping("/{userId}")
+    public Result<Employee> getEmployeeById(@PathVariable Long userId){
+        Employee employee = employeeService.getById(userId);
+        if (null==employee){
+            return Result.error("未查询到该员工的信息");
+        }
+        return Result.success(employee);
+    }
 }

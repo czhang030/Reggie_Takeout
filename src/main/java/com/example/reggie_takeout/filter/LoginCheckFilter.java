@@ -2,6 +2,7 @@ package com.example.reggie_takeout.filter;
 
 
 import com.alibaba.fastjson.JSON;
+import com.example.reggie_takeout.common.BaseContext;
 import com.example.reggie_takeout.pojo.Result;
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
@@ -52,6 +53,8 @@ public class LoginCheckFilter implements Filter {
         //4.利用session判断登录状态，如果已登录则直接放行
         if (request.getSession().getAttribute("employee")!=null){
             log.info("用户已经登录，其id为: {}",request.getSession().getAttribute("employee"));
+            Long emplId = (Long) request.getSession().getAttribute("employee");
+            BaseContext.setCurrentId(emplId);
             filterChain.doFilter(request, response);
             return;
         }

@@ -20,7 +20,9 @@ public class Employee {
   private String sex;
   private String idNumber;
   private long status;
+  @TableField(fill = FieldFill.INSERT)
   private LocalDateTime createTime;
+  @TableField(fill = FieldFill.INSERT_UPDATE)
   private LocalDateTime updateTime;
 
   //这两个先不用管，后面再说

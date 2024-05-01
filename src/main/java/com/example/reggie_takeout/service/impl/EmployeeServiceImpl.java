@@ -10,6 +10,8 @@ import com.example.reggie_takeout.service.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> implements EmployeeService {
     @Autowired
@@ -30,5 +32,22 @@ public class EmployeeServiceImpl extends ServiceImpl<EmployeeMapper, Employee> i
 
         employeeMapper.selectPage(pageInfo,wrapper);
         return Result.success(pageInfo);
+    }
+
+    @Override
+    public Result<String> updateEmployee(Long id, Employee employee) {
+
+        employee.setUpdate_user(id);
+        employee.setUpdateTime(LocalDateTime.now());
+
+        employeeMapper.updateById(employee);
+        return Result.success("修改员工信息成功！");
+    }
+
+    @Override
+    public Employee getById(Long id) {
+        Employee employee = employeeMapper.selectById(id);
+
+        return employee;
     }
 }
